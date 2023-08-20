@@ -1,0 +1,64 @@
+service: backend-serverless-caching
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: sa-east-1
+  timeout: 10
+  memorySize: 256
+  architecture: arm64
+  layers:
+    - { Ref: LayerCommonLambdaLayer }
+  logRetentionInDays: 1
+  environment:
+    STAGE: ${self:provider.stage, 'dev'}
+    MONGODB_URI: ${ssm:${self:service}-${self:provider.stage, 'dev'}-mongodb}
+  apiGateway:
+    shouldStartNameWithService: true
+    caching:
+      enabled: true
+      clusterSize: "0.5" # Tamanho do cache em GB. Escolha entre '0.5', '1.6', '6.1', '13.5', '28.4', e '58.2'.
+      ttlInSeconds: 3600 # TTL (Time-to-Live) em segundos. Por exemplo, 3600 segundos equivalem a 1 hora.
+      dataEncrypted: false # Se os dados no cache devem ser criptografados.
+      perKeyInvalidation:
+        requireAuthorization: false # Se a invalidação por chave requer autenticação.
+  versionFunctions: false
+  deploymentMethod: direct
+
+package:
+  patterns:
+    - "!./node_modules/**"
+    - "!./package-lock.json"
+    - "!./package.json"
+    - "!./layers/**"
+
+layers:
+  layerCommon:
+    name: ${self:service}-${self:provider.stage}-layerCommon
+    path: ./layers/layerCommon
+    description: "layer with common libraries"
+    package:
+      patterns:
+        - nodejs/**
+
+functions:
+  createCourse:
+    handler: serverless/functions/Course/create.handler
+    events:
+      - http:
+          path: courses
+          method: post
+
+  listCourse:
+    handler: serverless/functions/Course/list.handler
+    events:
+      - http:
+          path: courses
+          method: get
+          caching:
+            enabled: true
+            cacheKeyParameters:
+              - name: request.path.courses # Exemplo de chave de cache baseada no caminho.
+              # Adicione outros parâmetros se você tiver parâmetros de consulta ou headers que influenciam o cache.
