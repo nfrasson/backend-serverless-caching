@@ -1,5 +1,7 @@
+const { CourseModel, CourseSchema } = require("./models/Course");
+
 module.exports = {
-    databaseConnect: require("./connect"),
-    CourseModel: require("./models/Course"),
-  };
-  
+  databaseConnect: require("./connect"),
+  CourseModel,
+  CourseSchema,
+};

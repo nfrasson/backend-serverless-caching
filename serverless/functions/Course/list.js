@@ -1,8 +1,7 @@
 const { CourseModel } = require("commons/database");
 
 module.exports.handler = async (event) => {
-  const Course = await CourseModel();
-  const course = await Course.find({});
+  const course = await CourseModel.find({});
 
   return {
     statusCode: 200,

@@ -1,25 +1,26 @@
 const mongoose = require("mongoose");
 const connectDatabase = require("../connect");
 
-let CourseModel = null;
-
-module.exports = async () => {
-  if (CourseModel) return CourseModel;
-
-  const Course = new mongoose.Schema(
-    {
-      courseID: { type: String, unique: true, index: true },
+const CourseSchema = new mongoose.Schema(
+  {
+    courseID: { type: String, unique: true, index: true },
       courseTitle: String,
       courseDescription: String,
       deletedAt: Date,
       createdAt: Date,
+  },
+  {
+    collection: "course",
+    minimize: false,
+    strict: true,
+    useNestedStrict: true,
+    timestamps: {
+      createdAt: "courseCreatedAt",
+      updatedAt: "courseUpdatedAt",
     },
-    {
-      timestamps: true,
-    }
-  );
+  }
+);
 
-  CourseModel = await connectDatabase({ name: "Course", schema: Course });
+const CourseModel = connectDatabase({ name: "Course", schema: CourseSchema });
 
-  return CourseModel.model("Course");
-};
+module.exports = { CourseModel, CourseSchema };
