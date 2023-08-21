@@ -1,5 +1,5 @@
 {
-  "name": "nodejs",
+  "name": "backend-serverless-caching",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.1440.0",
-    "mongoose": "^7.4.3"
+    "serverless-api-gateway-caching": "^1.10.2"
   }
 }
