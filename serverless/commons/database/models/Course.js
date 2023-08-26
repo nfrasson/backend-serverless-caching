@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const connectDatabase = require("../connect");
+const databaseConnection = require("../connect");
 
 const CourseSchema = new mongoose.Schema(
   {
@@ -21,6 +21,6 @@ const CourseSchema = new mongoose.Schema(
   }
 );
 
-const CourseModel = connectDatabase({ name: "Course", schema: CourseSchema });
+const CourseModel = databaseConnection({ name: "Course", schema: CourseSchema });
 
 module.exports = { CourseModel, CourseSchema };

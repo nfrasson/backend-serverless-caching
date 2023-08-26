@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.1440.0",
+    "@aws-sdk/client-api-gateway": "^3.398.0",
     "mongoose": "^7.4.3"
   }
 }
